@@ -73,9 +73,9 @@ public:
 	void Melee(void);
 	void CallForBackup(char* szClassname, float flDist, EHANDLE hEnemy, Vector& vecLocation);
 
-	BOOL CheckRangeAttack1(float flDot, float flDist);
-	BOOL CheckMeleeAttack1(float flDot, float flDist);
-	BOOL CheckMeleeAttack2(float flDot, float flDist);
+	bool CheckRangeAttack1(float flDot, float flDist);
+	bool CheckMeleeAttack1(float flDot, float flDist);
+	bool CheckMeleeAttack2(float flDot, float flDist);
 
 	void StartTask(Task_t* pTask);
 	Schedule_t* GetScheduleOfType(int Type);
@@ -84,17 +84,27 @@ public:
 	inline Activity	GetActivity(void) { return m_Activity; }
 	int m_iShell;
 
-	virtual int		Save(CSave& save);
-	virtual int		Restore(CRestore& restore);
-	static	TYPEDESCRIPTION m_SaveData[];
+	bool Save(CSave& save) override;
+	bool Restore(CRestore& restore) override;
+	static TYPEDESCRIPTION m_SaveData[];
 
 	CUSTOM_SCHEDULES;
 
 private:
 	int m_ifirestate;
-	BOOL bAlerted;
+	bool bAlerted;
 
 };
+
+
+TYPEDESCRIPTION CHAssault::m_SaveData[] =
+	{
+		DEFINE_FIELD(CHAssault, bAlerted, FIELD_BOOLEAN),
+		DEFINE_FIELD(CHAssault, m_ifirestate, FIELD_INTEGER),
+};
+
+IMPLEMENT_SAVERESTORE(CHAssault, CBaseMonster);
+
 
 
 //=========================================================
@@ -237,13 +247,6 @@ IMPLEMENT_CUSTOM_SCHEDULES(CHAssault, CBaseMonster);
 
 LINK_ENTITY_TO_CLASS(monster_human_assault, CHAssault);
 
-TYPEDESCRIPTION	CHAssault::m_SaveData[] =
-{
-	DEFINE_FIELD(CHAssault, bAlerted, FIELD_BOOLEAN),
-	DEFINE_FIELD(CHAssault, m_ifirestate, FIELD_INTEGER),
-};
-
-IMPLEMENT_SAVERESTORE(CHAssault, CBaseMonster);
 
 //=========================================================
 // Spawn
@@ -506,32 +509,32 @@ void CHAssault::CallForBackup(char* szClassname, float flDist, EHANDLE hEnemy, V
 //=========================================================
 // shoot while are melee range | UNDONE!!
 //=========================================================
-BOOL CHAssault::CheckRangeAttack1(float flDot, float flDist)
+bool CHAssault::CheckRangeAttack1(float flDot, float flDist)
 {
 	if (flDot > 0.5)
 	//if (flDot > 0.5 && flDist > 70)
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 //=========================================================
 // Added 0.52 melee animatons so don't just return false
 //=========================================================
-BOOL CHAssault::CheckMeleeAttack1(float flDot, float flDist)
+bool CHAssault::CheckMeleeAttack1(float flDot, float flDist)
 {
 	//return FALSE;
 	if (flDot > 0.5 && flDist < 70)
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL CHAssault::CheckMeleeAttack2(float flDot, float flDist)
+bool CHAssault::CheckMeleeAttack2(float flDot, float flDist)
 {
-	return FALSE;
+	return false;
 }
 
 void CHAssault::StartTask(Task_t* pTask)
