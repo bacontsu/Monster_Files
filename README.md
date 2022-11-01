@@ -1,4 +1,4 @@
-# The Monster Files (Updated Code for HLSDK 2.4)
+# The Monster Files (for Solokiller's Half-Life Update
 All credits goes to Magic Nipples
 
 ***
